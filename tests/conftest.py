@@ -2,6 +2,10 @@
 
 pytest-playwright already provides the `page` fixture (a fresh browser page
 per test). These fixtures build page objects on top of it.
+
+Mobile device emulation is supported via pytest-playwright's built-in
+--device flag (e.g. `pytest -m mobile --device="iPhone 12"`), so no
+extra fixtures are needed to apply it.
 """
 import pytest
 from pages.login_page import LoginPage

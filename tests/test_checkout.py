@@ -80,6 +80,3 @@ def test_checkout_with_price_verification(logged_in_user, cart_page, checkout_pa
     
     assert abs(total - calculated_total) < 0.01, \
         f"Total should be ${calculated_total:.2f} (${actual_subtotal:.2f} + ${tax:.2f}), got ${total:.2f}"
-    
-    # All verifications passed
-    assert True, "Checkout complete with correct price calculations"
