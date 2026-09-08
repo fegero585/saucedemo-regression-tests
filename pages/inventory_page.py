@@ -29,7 +29,8 @@ class InventoryPage(BasePage):
     def click_product(self, product_name: str) -> None:
         """Click on a product to view its details."""
         card = self.product_card(product_name)
-        card.get_by_role("link", name=product_name).click()
+        # Use .first to avoid strict mode violation (multiple links with same name)
+        card.get_by_role("link", name=product_name).first.click()
 
     def add_product_to_cart(self, product_name: str) -> None:
         """Add a product to the cart."""
@@ -59,5 +60,6 @@ class InventoryPage(BasePage):
         Args:
             sort_option: One of 'az', 'za', 'lohi', 'hilo'
         """
-        sort_dropdown = self.page.locator("[data-test='product_sort_container']")
+        # Find the sort dropdown by class name
+        sort_dropdown = self.page.locator("select.product_sort_container")
         sort_dropdown.select_option(sort_option)

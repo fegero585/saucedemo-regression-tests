@@ -8,6 +8,8 @@ from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 from pages.product_page import ProductPage
 from pages.cart_page import CartPage
+from pages.checkout_page import CheckoutPage
+from pages.checkout_overview_page import CheckoutOverviewPage
 
 # Standard Saucedemo credentials
 STANDARD_USER = "standard_user"
@@ -36,6 +38,18 @@ def product_page(page):
 def cart_page(page):
     """Create a CartPage fixture."""
     return CartPage(page)
+
+
+@pytest.fixture
+def checkout_page(page):
+    """Create a CheckoutPage fixture."""
+    return CheckoutPage(page)
+
+
+@pytest.fixture
+def checkout_overview_page(page):
+    """Create a CheckoutOverviewPage fixture."""
+    return CheckoutOverviewPage(page)
 
 
 @pytest.fixture
