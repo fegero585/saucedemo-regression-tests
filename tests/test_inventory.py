@@ -30,14 +30,31 @@ def test_products_have_prices(logged_in_user):
 
 @pytest.mark.inventory
 def test_sort_by_name_a_to_z(logged_in_user):
-    """User can sort products by name (A to Z)."""
+    """Sorting A to Z puts product names in ascending alphabetical order."""
     logged_in_user.sort_by("az")
-    # Verify that sorting occurred (page reloads)
-    assert "inventory" in logged_in_user.get_url()
+    names = logged_in_user.get_product_names()
+    assert names == sorted(names)
+
+
+@pytest.mark.inventory
+def test_sort_by_name_z_to_a(logged_in_user):
+    """Sorting Z to A puts product names in descending alphabetical order."""
+    logged_in_user.sort_by("za")
+    names = logged_in_user.get_product_names()
+    assert names == sorted(names, reverse=True)
 
 
 @pytest.mark.inventory
 def test_sort_by_price_low_to_high(logged_in_user):
-    """User can sort products by price (low to high)."""
+    """Sorting price low to high puts prices in ascending order."""
     logged_in_user.sort_by("lohi")
-    assert "inventory" in logged_in_user.get_url()
+    prices = logged_in_user.get_product_prices()
+    assert prices == sorted(prices)
+
+
+@pytest.mark.inventory
+def test_sort_by_price_high_to_low(logged_in_user):
+    """Sorting price high to low puts prices in descending order."""
+    logged_in_user.sort_by("hilo")
+    prices = logged_in_user.get_product_prices()
+    assert prices == sorted(prices, reverse=True)

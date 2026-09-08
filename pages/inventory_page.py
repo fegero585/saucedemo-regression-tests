@@ -56,10 +56,19 @@ class InventoryPage(BasePage):
 
     def sort_by(self, sort_option: str) -> None:
         """Sort the product list by the specified option.
-        
+
         Args:
             sort_option: One of 'az', 'za', 'lohi', 'hilo'
         """
         # Find the sort dropdown by class name
         sort_dropdown = self.page.locator("select.product_sort_container")
         sort_dropdown.select_option(sort_option)
+
+    def get_product_names(self) -> list[str]:
+        """Get all product names in on-screen order (row 1 left-to-right, then row 2, ...)."""
+        return self.page.locator(".inventory_item_name").all_inner_texts()
+
+    def get_product_prices(self) -> list[float]:
+        """Get all product prices as floats, in on-screen order."""
+        prices = self.page.locator(".inventory_item_price").all_inner_texts()
+        return [float(price.replace("$", "")) for price in prices]
