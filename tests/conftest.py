@@ -1,0 +1,49 @@
+"""Shared pytest fixtures for Saucedemo tests.
+
+pytest-playwright already provides the `page` fixture (a fresh browser page
+per test). These fixtures build page objects on top of it.
+"""
+import pytest
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
+from pages.product_page import ProductPage
+from pages.cart_page import CartPage
+
+# Standard Saucedemo credentials
+STANDARD_USER = "standard_user"
+STANDARD_PASSWORD = "secret_sauce"
+
+
+@pytest.fixture
+def login_page(page):
+    """Create a LoginPage fixture."""
+    return LoginPage(page)
+
+
+@pytest.fixture
+def inventory_page(page):
+    """Create an InventoryPage fixture."""
+    return InventoryPage(page)
+
+
+@pytest.fixture
+def product_page(page):
+    """Create a ProductPage fixture."""
+    return ProductPage(page)
+
+
+@pytest.fixture
+def cart_page(page):
+    """Create a CartPage fixture."""
+    return CartPage(page)
+
+
+@pytest.fixture
+def logged_in_user(login_page, inventory_page):
+    """
+    Fixture that logs in a standard user and navigates to inventory.
+    Returns the inventory_page, ready to use.
+    """
+    login_page.load()
+    login_page.login(STANDARD_USER, STANDARD_PASSWORD)
+    return inventory_page
