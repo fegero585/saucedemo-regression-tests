@@ -1,0 +1,40 @@
+Test Case ID,Title,Priority,Type,Precondition,Method,Endpoint,Headers,Request Body,Steps,Expected Result,Actual Result,Status (Pass/Fail),Tested By,Date Tested,Automated Test Reference
+TC-API-01,Create a new booking,High,Positive,None - first case in the sequence.,POST,/booking,"Content-Type: application/json
+Accept: application/json","{
+  ""firstname"": ""Jim"",
+  ""lastname"": ""Brown"",
+  ""totalprice"": 111,
+  ""depositpaid"": true,
+  ""bookingdates"": {
+    ""checkin"": ""2026-01-01"",
+    ""checkout"": ""2026-01-05""
+  },
+  ""additionalneeds"": ""Breakfast""
+}","1. Send POST to {base_url}/booking with the headers and body.
+2. Record the bookingid returned - reused in TC-API-02, 05, 06, 07, 08.",Status 200 OK. Response contains a numeric bookingid. The booking object in the response equals the request body exactly.,,,,,tests/api/test_booking_crud.py::test_create_booking_returns_id_and_matching_data
+TC-API-02,Retrieve booking by ID,High,Positive,TC-API-01 complete; have its bookingid.,GET,/booking/<bookingid>,Accept: application/json,,1. Send GET to {base_url}/booking/<bookingid from TC-API-01>.,Status 200 OK. Response body equals the booking data submitted in TC-API-01.,,,,,tests/api/test_booking_crud.py::test_get_booking_returns_created_data
+TC-API-03,Retrieve a non-existent booking,Medium,Negative,None.,GET,/booking/999999999,Accept: application/json,,1. Send GET to {base_url}/booking/999999999 (an id that will never be real).,Status 404 Not Found.,,,,,tests/api/test_booking_crud.py::test_get_nonexistent_booking_returns_404
+TC-API-04,Authenticate as admin,High,Positive,None.,POST,/auth,Content-Type: application/json,"{
+  ""username"": ""admin"",
+  ""password"": ""password123""
+}","1. Send POST to {base_url}/auth with the credentials body.
+2. Record the token string - needed for TC-API-05, 07, 08.",Status 200 OK. Response contains a non-empty token field.,,,,,tests/api/test_auth.py::test_valid_credentials_return_token
+TC-API-05,Update booking with a valid token,High,Positive,TC-API-01 and TC-API-04 complete; have bookingid and token.,PUT,/booking/<bookingid>,"Content-Type: application/json
+Cookie: token=<token from TC-API-04>","{
+  ""firstname"": ""Updated"",
+  ""lastname"": ""Name"",
+  ""totalprice"": 222,
+  ""depositpaid"": true,
+  ""bookingdates"": {
+    ""checkin"": ""2026-01-01"",
+    ""checkout"": ""2026-01-05""
+  },
+  ""additionalneeds"": ""Breakfast""
+}","1. Send PUT to {base_url}/booking/<bookingid> with the headers and body.
+2. Send a follow-up GET /booking/<bookingid> to confirm the change persisted.",PUT returns 200 OK with body equal to the updated payload. Follow-up GET also returns the updated data.,,,,,tests/api/test_booking_crud.py::test_update_booking_with_valid_token
+TC-API-06,Update booking with an invalid token,Medium,Negative,TC-API-01 complete; have a bookingid.,PUT,/booking/<bookingid>,"Content-Type: application/json
+Cookie: token=not-a-real-token",Any valid booking payload (e.g. reuse the body from TC-API-01).,1. Send PUT to {base_url}/booking/<bookingid> with a deliberately bogus Cookie token.,Status 401 Unauthorized or 403 Forbidden. The booking's data is not changed.,,,,,tests/api/test_booking_crud.py::test_update_booking_without_valid_token_is_rejected
+TC-API-07,Partially update a booking,Medium,Positive,TC-API-01 and TC-API-04 complete; have bookingid and token.,PATCH,/booking/<bookingid>,"Content-Type: application/json
+Cookie: token=<token from TC-API-04>","{ ""firstname"": ""Patched"" }",1. Send PATCH to {base_url}/booking/<bookingid> with the single-field body.,"Status 200 OK. firstname is now ""Patched""; every other field is unchanged.",,,,,tests/api/test_booking_crud.py::test_partial_update_changes_only_given_fields
+TC-API-08,Delete a booking,High,Positive,TC-API-01 and TC-API-04 complete; have bookingid and token.,DELETE,/booking/<bookingid>,Cookie: token=<token from TC-API-04>,,"1. Send DELETE to {base_url}/booking/<bookingid>.
+2. Send a follow-up GET /booking/<bookingid> to confirm it's gone.",DELETE returns 200 OK or 201 Created. Follow-up GET returns 404 Not Found.,,,,,tests/api/test_booking_crud.py::test_delete_booking_removes_it
