@@ -2,6 +2,8 @@
 
 A comprehensive **test automation suite** for [saucedemo.com](https://www.saucedemo.com/) built with modern QA best practices. This project demonstrates expertise in **end-to-end testing**, **page object modeling**, and **test automation frameworks**.
 
+📊 **[Live test report](https://fegero585.github.io/saucedemo-regression-tests/)** - auto-published by CI on every push to `main`, no need to clone the repo to see actual pass/fail results.
+
 ## ✨ Key Features
 
 - **Page Object Model (POM)** - Clean separation of test logic and UI interactions
@@ -24,6 +26,22 @@ A comprehensive **test automation suite** for [saucedemo.com](https://www.sauced
 | **pytest-playwright** | Pytest plugin for Playwright integration |
 | **python-dotenv** | Environment variable management |
 | **requests** | HTTP client for API automation tests |
+
+## 🤖 AI-Assisted Development
+
+This project is built in collaboration with [Claude Code](https://claude.com/claude-code), Anthropic's AI coding agent, used as a pairing tool across both the UI (Playwright/POM) and API (`requests`-based client) suites.
+
+**What AI accelerated:**
+- Scaffolding new test suites and page/client objects that follow the project's existing patterns
+- Drafting fixtures, assertions, and tooling config (e.g. the HTML reporting and CI/Pages setup)
+- First-pass documentation
+
+**What stayed human-driven:**
+- Architecture decisions - Page Object Model for UI, client-object pattern for API, session-scoped auth fixtures
+- Verifying correctness against real behavior, not just "tests are green" - e.g. confirming the API suite hits a live server (not mocks) by inspecting actual request/response logs, tracing fixture setup/teardown order, and deliberately checking negative cases (404s, invalid tokens)
+- Code review and direction throughout - iterating on generated code rather than accepting first drafts as final
+
+The point isn't that AI wrote the tests unsupervised - it's using AI tooling deliberately to move faster while still owning correctness, architecture, and review.
 
 ## 📋 Project Overview
 
