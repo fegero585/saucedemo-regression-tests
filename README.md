@@ -158,9 +158,20 @@ pytest -m mobile --device="Pixel 5"
 pytest -n auto
 ```
 
-### Generate an HTML report
+### Browser-based HTML report
+Every run auto-generates a self-contained `report.html` (via `pytest-html`,
+configured in `pytest.ini`) - open it in any browser to see pass/fail status,
+durations, and tracebacks for failures. It's regenerated (overwritten) each
+run and gitignored, so no setup or extra flags needed:
 ```bash
-pytest --html=report.html
+pytest                  # writes report.html, then open it
+start report.html       # Windows
+open report.html        # macOS
+xdg-open report.html    # Linux
+```
+To write it somewhere else or add more detail, pass `--html`/`--self-contained-html` explicitly:
+```bash
+pytest --html=results/report.html --self-contained-html
 ```
 
 ## 🔐 Test Credentials

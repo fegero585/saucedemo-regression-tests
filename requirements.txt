@@ -3,3 +3,4 @@ pytest-playwright==0.4.3
 playwright==1.48.0
 python-dotenv==1.0.0
 requests==2.32.3
+pytest-html==4.2.0

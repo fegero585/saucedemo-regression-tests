@@ -38,6 +38,7 @@ wheels/
 .coverage
 htmlcov/
 .tox/
+report.html
 
 # Playwright
 test-results/
