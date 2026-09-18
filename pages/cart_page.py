@@ -54,6 +54,7 @@ class CartPage(BasePage):
         self.continue_shopping_button.click()
 
     def is_empty(self) -> bool:
-        """Check if the cart is empty."""
+        """Check if the cart is empty (once the cart page has rendered)."""
+        expect(self.cart_items_container).to_be_visible()
         cart_items = self.page.locator(".cart_item")
         return cart_items.count() == 0

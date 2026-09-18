@@ -1,27 +1,22 @@
 """Regression tests: cart management."""
 import pytest
+from playwright.sync_api import expect
 
 BACKPACK = "Sauce Labs Backpack"
 BIKE_LIGHT = "Sauce Labs Bike Light"
 
 
 @pytest.mark.cart
-def test_cart_is_empty_on_new_session(login_page, inventory_page):
+def test_cart_is_empty_on_new_session(logged_in_user):
     """A new login session should have an empty cart."""
-    login_page.load()
-    login_page.login("standard_user", "secret_sauce")
-    # Cart badge should not be visible if empty
-    cart_badge = inventory_page.page.locator(".shopping_cart_badge")
-    # Either the badge doesn't exist or is not visible
-    badge_count = cart_badge.count()
-    assert badge_count == 0 or not cart_badge.is_visible()
+    # Badge is either absent or hidden when the cart is empty. The fixture has
+    # already waited for the inventory, so this can't pass on an unloaded page.
+    expect(logged_in_user.cart_badge).not_to_be_visible()
 
 
 @pytest.mark.cart
-def test_can_view_empty_cart(login_page, cart_page):
+def test_can_view_empty_cart(logged_in_user, cart_page):
     """User can view cart page when empty."""
-    login_page.load()
-    login_page.login("standard_user", "secret_sauce")
     cart_page.load()
     assert cart_page.is_empty()
 

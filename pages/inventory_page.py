@@ -17,6 +17,10 @@ class InventoryPage(BasePage):
         """Navigate to the inventory page."""
         self.goto(INVENTORY_URL)
 
+    def expect_loaded(self) -> None:
+        """Assert the product list has rendered (i.e. login completed)."""
+        expect(self.page.locator("div.inventory_item").first).to_be_visible()
+
     def product_card(self, product_name: str):
         """Returns the product card for a given product name."""
         return self.page.locator("div.inventory_item").filter(has_text=product_name)
@@ -29,8 +33,9 @@ class InventoryPage(BasePage):
     def click_product(self, product_name: str) -> None:
         """Click on a product to view its details."""
         card = self.product_card(product_name)
-        # Use .first to avoid strict mode violation (multiple links with same name)
-        card.get_by_role("link", name=product_name).first.click()
+        # The site marks these anchors role="button", so get_by_role("link") no
+        # longer matches; the data-test hook is stable and unique per card.
+        card.locator("[data-test$='-title-link']").click()
 
     def add_product_to_cart(self, product_name: str) -> None:
         """Add a product to the cart."""

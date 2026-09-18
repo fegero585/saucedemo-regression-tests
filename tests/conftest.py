@@ -60,8 +60,10 @@ def checkout_overview_page(page):
 def logged_in_user(login_page, inventory_page):
     """
     Fixture that logs in a standard user and navigates to inventory.
-    Returns the inventory_page, ready to use.
+    Waits for the product list to render, so tests never race the page load
+    (or pass vacuously after a failed login). Returns the inventory_page.
     """
     login_page.load()
     login_page.login(STANDARD_USER, STANDARD_PASSWORD)
+    inventory_page.expect_loaded()
     return inventory_page

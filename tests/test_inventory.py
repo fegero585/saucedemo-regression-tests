@@ -1,5 +1,6 @@
 """Regression tests: inventory/products page."""
 import pytest
+from playwright.sync_api import expect
 
 BACKPACK = "Sauce Labs Backpack"
 BIKE_LIGHT = "Sauce Labs Bike Light"
@@ -10,6 +11,8 @@ BIKE_LIGHT = "Sauce Labs Bike Light"
 def test_products_are_displayed(logged_in_user):
     """User can see products on the inventory page."""
     products = logged_in_user.page.locator("div.inventory_item")
+    # count() is a snapshot and doesn't wait; expect() retries until rendered.
+    expect(products.first).to_be_visible()
     assert products.count() > 0
 
 
