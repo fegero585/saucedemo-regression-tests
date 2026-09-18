@@ -31,6 +31,15 @@ class LoginPage(BasePage):
         self.password_input.fill(password)
         self.login_button.click()
 
+    def expect_on_login_page(self) -> None:
+        """Assert the login form is displayed."""
+        expect(self.login_button).to_be_visible()
+
+    def expect_form_cleared(self) -> None:
+        """Assert the username and password fields are empty."""
+        expect(self.username_input).to_have_value("")
+        expect(self.password_input).to_have_value("")
+
     def expect_error_message(self, expected_text: str) -> None:
         """Assert that an error message appears with the expected text."""
         expect(self.error_message).to_contain_text(expected_text)

@@ -12,6 +12,8 @@ class InventoryPage(BasePage):
         super().__init__(page)
         self.cart_badge = page.locator(".shopping_cart_badge")
         self.cart_link = page.locator(".shopping_cart_link")
+        self.menu_button = page.locator("#react-burger-menu-btn")
+        self.logout_link = page.locator("#logout_sidebar_link")
 
     def load(self) -> None:
         """Navigate to the inventory page."""
@@ -58,6 +60,11 @@ class InventoryPage(BasePage):
     def open_cart(self) -> None:
         """Click the cart icon to navigate to the cart page."""
         self.cart_link.click()
+
+    def logout(self) -> None:
+        """Open the side menu and log out."""
+        self.menu_button.click()
+        self.logout_link.click()
 
     def sort_by(self, sort_option: str) -> None:
         """Sort the product list by the specified option.

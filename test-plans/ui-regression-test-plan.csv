@@ -74,3 +74,39 @@ device: iPhone 12","1. Open saucedemo.com in a mobile viewport.
 TC-UI-23,Add to cart on a mobile viewport,Medium,Positive,"Logged in, mobile viewport active.","product: Sauce Labs Backpack
 device: iPhone 12","1. On a mobile viewport, log in.
 2. Tap ""Add to cart"" on the Backpack.","Cart badge shows ""1"". Tap target is usable at mobile width (not obscured or mis-sized).",,,,,tests/test_mobile.py::test_add_to_cart_on_mobile
+TC-UI-24,Checkout requires First Name,High,Negative,Logged in as standard_user; one item in the cart; on Checkout: Your Information.,"first name: (empty)
+last name: Doe
+zip/postal code: 14108","1. Enter the first name, last name and zip/postal code shown in Test Data (leave '(empty)' fields blank).
+2. Click Continue.","Error ""Error: First Name is required"" is displayed. User stays on checkout-step-one.html and does not reach the Overview page.",,,,,tests/test_checkout.py::test_checkout_requires_all_fields[missing_first_name]
+TC-UI-25,Checkout requires Last Name,High,Negative,Logged in as standard_user; one item in the cart; on Checkout: Your Information.,"first name: Jo
+last name: (empty)
+zip/postal code: 14108","1. Enter the first name, last name and zip/postal code shown in Test Data (leave '(empty)' fields blank).
+2. Click Continue.","Error ""Error: Last Name is required"" is displayed. User stays on checkout-step-one.html and does not reach the Overview page.",,,,,tests/test_checkout.py::test_checkout_requires_all_fields[missing_last_name]
+TC-UI-26,Checkout requires Zip/Postal Code,High,Negative,Logged in as standard_user; one item in the cart; on Checkout: Your Information.,"first name: Jo
+last name: Doe
+zip/postal code: (empty)","1. Enter the first name, last name and zip/postal code shown in Test Data (leave '(empty)' fields blank).
+2. Click Continue.","Error ""Error: Postal Code is required"" is displayed. User stays on checkout-step-one.html and does not reach the Overview page.",,,,,tests/test_checkout.py::test_checkout_requires_all_fields[missing_postal_code]
+TC-UI-27,Checkout with all fields empty,Medium,Negative,Logged in as standard_user; one item in the cart; on Checkout: Your Information.,"first name: (empty)
+last name: (empty)
+zip/postal code: (empty)","1. Enter the first name, last name and zip/postal code shown in Test Data (leave '(empty)' fields blank).
+2. Click Continue.","Error ""Error: First Name is required"" is displayed. User stays on checkout-step-one.html and does not reach the Overview page.",,,,,tests/test_checkout.py::test_checkout_requires_all_fields[all_fields_empty]
+TC-UI-28,Complete checkout and see order confirmation,High,Positive,Logged in as standard_user.,"product: Sauce Labs Backpack
+first name: Jo
+last name: Doe
+zip/postal code: 14108","1. Add the Backpack to the cart.
+2. Open the cart and click Checkout.
+3. Fill in First Name, Last Name and Zip/Postal Code.
+4. Click Continue.
+5. On the Overview page, click Finish.
+6. Click Back Home.","After Finish: ""Thank you for your order!"" is displayed and the cart badge is gone. After Back Home: Inventory page is shown with an empty cart (no badge).",,,,,tests/test_checkout.py::test_checkout_completes_with_confirmation
+TC-UI-29,Locked-out user cannot log in,High,Negative,On the login page.,"username: locked_out_user
+password: secret_sauce","1. Enter username ""locked_out_user"".
+2. Enter password ""secret_sauce"".
+3. Click Login.","Error ""Epic sadface: Sorry, this user has been locked out."" is displayed. User stays on the login page and does not reach the Inventory page.",,,,,tests/test_login.py::test_locked_out_user_cannot_login
+TC-UI-30,Logout ends the session,Medium,Positive,"Logged in as standard_user, on the Inventory page.",,"1. Open the side menu (hamburger icon).
+2. Click Logout.
+3. Click the browser Back button.","After Logout: login page is shown with empty Username and Password fields. After Back: the Inventory page is not shown; the login page displays ""You can only access '/inventory.html' when you are logged in"".",,,,,tests/test_login.py::test_logout_ends_session
+TC-UI-31,Protected pages require login,High,Negative,Not logged in (fresh browser session).,"pages: /inventory.html, /cart.html, /checkout-step-one.html, /checkout-complete.html",1. Open each URL from Test Data directly in the browser address bar (base: https://www.saucedemo.com).,"For each page: the login form is displayed with an error ""Epic sadface: You can only access '<path>' when you are logged in"".",,,,,tests/test_login.py::test_protected_pages_require_login
+TC-UI-32,Cart persists after page reload,Medium,Positive,Logged in as standard_user.,product: Sauce Labs Backpack,"1. Add the Backpack to the cart.
+2. Reload the page (F5).
+3. Open the cart.","After reload: cart badge still shows ""1"". Cart page lists the Backpack.",,,,,tests/test_cart_management.py::test_cart_persists_after_page_reload

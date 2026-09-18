@@ -14,6 +14,7 @@ from pages.product_page import ProductPage
 from pages.cart_page import CartPage
 from pages.checkout_page import CheckoutPage
 from pages.checkout_overview_page import CheckoutOverviewPage
+from pages.checkout_complete_page import CheckoutCompletePage
 
 # Standard Saucedemo credentials
 STANDARD_USER = "standard_user"
@@ -54,6 +55,12 @@ def checkout_page(page):
 def checkout_overview_page(page):
     """Create a CheckoutOverviewPage fixture."""
     return CheckoutOverviewPage(page)
+
+
+@pytest.fixture
+def checkout_complete_page(page):
+    """Create a CheckoutCompletePage fixture."""
+    return CheckoutCompletePage(page)
 
 
 @pytest.fixture

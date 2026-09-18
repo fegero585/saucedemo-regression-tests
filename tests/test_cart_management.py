@@ -44,3 +44,15 @@ def test_cart_persists_after_leaving_page(logged_in_user, cart_page):
     
     cart_page.expect_item_present(BACKPACK)
     cart_page.expect_item_present(BIKE_LIGHT)
+
+
+@pytest.mark.cart
+def test_cart_persists_after_page_reload(logged_in_user, cart_page):
+    """Cart contents survive a full page reload."""
+    logged_in_user.add_product_to_cart(BACKPACK)
+    logged_in_user.page.reload()
+    logged_in_user.expect_loaded()
+
+    logged_in_user.expect_cart_count("1")
+    logged_in_user.open_cart()
+    cart_page.expect_item_present(BACKPACK)

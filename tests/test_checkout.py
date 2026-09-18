@@ -1,7 +1,8 @@
-"""Regression tests: checkout flow with price verification."""
+"""Regression tests: checkout flow (price verification, validation, completion)."""
 import pytest
 import random
 import string
+from playwright.sync_api import expect
 
 BACKPACK = "Sauce Labs Backpack"
 BIKE_LIGHT = "Sauce Labs Bike Light"
@@ -80,3 +81,53 @@ def test_checkout_with_price_verification(logged_in_user, cart_page, checkout_pa
     
     assert abs(total - calculated_total) < 0.01, \
         f"Total should be ${calculated_total:.2f} (${actual_subtotal:.2f} + ${tax:.2f}), got ${total:.2f}"
+
+
+@pytest.fixture
+def on_checkout_info_page(logged_in_user, cart_page):
+    """Logged-in user with one item in the cart, on the checkout info form."""
+    logged_in_user.add_product_to_cart(BACKPACK)
+    logged_in_user.open_cart()
+    cart_page.checkout()
+
+
+@pytest.mark.checkout
+@pytest.mark.parametrize(
+    "first_name, last_name, postal_code, expected_error",
+    [
+        ("", "Doe", "14108", "First Name is required"),
+        ("Jo", "", "14108", "Last Name is required"),
+        ("Jo", "Doe", "", "Postal Code is required"),
+        ("", "", "", "First Name is required"),
+    ],
+    ids=["missing_first_name", "missing_last_name", "missing_postal_code", "all_fields_empty"],
+)
+def test_checkout_requires_all_fields(
+    on_checkout_info_page, checkout_page, first_name, last_name, postal_code, expected_error
+):
+    """Checkout info form rejects missing fields and stays on step 1."""
+    checkout_page.fill_checkout_info(first_name, last_name, postal_code)
+    checkout_page.continue_to_overview()
+
+    checkout_page.expect_error_message(expected_error)
+    assert "checkout-step-one" in checkout_page.get_url()
+
+
+@pytest.mark.checkout
+def test_checkout_completes_with_confirmation(
+    logged_in_user, cart_page, checkout_page, checkout_overview_page, checkout_complete_page
+):
+    """Finishing checkout shows the confirmation and empties the cart."""
+    logged_in_user.add_product_to_cart(BACKPACK)
+    logged_in_user.open_cart()
+    cart_page.checkout()
+    checkout_page.fill_checkout_info("Jo", "Doe", "14108")
+    checkout_page.continue_to_overview()
+    checkout_overview_page.finish_checkout()
+
+    checkout_complete_page.expect_order_confirmed()
+    expect(logged_in_user.cart_badge).not_to_be_visible()
+
+    checkout_complete_page.back_home()
+    logged_in_user.expect_loaded()
+    expect(logged_in_user.cart_badge).not_to_be_visible()

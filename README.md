@@ -47,10 +47,10 @@ The point isn't that AI wrote the tests unsupervised - it's using AI tooling del
 
 This project provides regression tests for the Saucedemo demo e-commerce site, covering key user workflows:
 
-- **🔐 Login** - Valid/invalid credentials, error handling, edge cases
+- **🔐 Login** - Valid/invalid credentials, locked-out user, logout, protected-page access, error handling
 - **📦 Inventory/Products** - Product listing, sorting, filtering
 - **🛒 Shopping Cart** - Add/remove items, cart management, persistence
-- **💳 Checkout** - Complete purchase flow with subtotal/tax/total price verification
+- **💳 Checkout** - Complete purchase flow with subtotal/tax/total price verification, form validation, order confirmation
 - **📱 Mobile** - Login and cart flows under real device emulation
 - **🔌 API** - CRUD, auth, and search coverage against a live REST API
 
@@ -72,7 +72,8 @@ saucedemo-regression-tests/
 │   ├── product_page.py             # Product detail page interactions
 │   ├── cart_page.py                # Shopping cart management
 │   ├── checkout_page.py            # Checkout info form (step 1)
-│   └── checkout_overview_page.py   # Checkout overview & price totals (step 2)
+│   ├── checkout_overview_page.py   # Checkout overview & price totals (step 2)
+│   └── checkout_complete_page.py   # Order confirmation page
 ├── api/                             # API Client Objects (API)
 │   ├── base_client.py               # Base class - shared requests.Session helpers
 │   └── booking_client.py            # restful-booker ping/auth/booking endpoints
