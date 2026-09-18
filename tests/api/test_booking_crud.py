@@ -84,3 +84,92 @@ def test_delete_booking_removes_it(api_client, auth_token, booking_payload_facto
 
     fetch_response = api_client.get_booking(booking_id)
     assert fetch_response.status_code == 404
+
+
+@pytest.mark.api
+@pytest.mark.booking
+@pytest.mark.parametrize("method", ["put", "patch", "delete"])
+@pytest.mark.parametrize(
+    "headers",
+    [{}, {"Cookie": "token="}, {"Cookie": "token=bogus"}],
+    ids=["no_token", "empty_token", "bogus_token"],
+)
+def test_write_without_valid_token_is_forbidden(
+    api_client, created_booking, booking_payload_factory, method, headers
+):
+    """PUT/PATCH/DELETE without a valid token get 403 and leave the booking unchanged."""
+    booking_id, original_payload = created_booking
+    bodies = {
+        "put": booking_payload_factory(firstname="Hacked"),
+        "patch": {"firstname": "Hacked"},
+        "delete": None,
+    }
+    kwargs = {"headers": headers}
+    if bodies[method] is not None:
+        kwargs["json"] = bodies[method]
+
+    response = getattr(api_client, method)(f"/booking/{booking_id}", **kwargs)
+
+    assert response.status_code == 403
+    assert api_client.get_booking(booking_id).json() == original_payload
+
+
+@pytest.mark.api
+@pytest.mark.booking
+@pytest.mark.parametrize(
+    "build_body",
+    [
+        lambda payload: {k: v for k, v in payload.items() if k != "firstname"},
+        lambda payload: {},
+    ],
+    ids=["missing_firstname", "empty_object"],
+)
+def test_update_with_missing_fields_is_rejected(api_client, created_booking, auth_token, build_body):
+    """PUT replaces the whole booking, so an incomplete body is a 400 and changes nothing."""
+    booking_id, original_payload = created_booking
+
+    response = api_client.update_booking(booking_id, build_body(original_payload), auth_token)
+
+    assert response.status_code == 400
+    assert api_client.get_booking(booking_id).json() == original_payload
+
+
+# --- Known API defects -----------------------------------------------------
+# These assert the CORRECT behaviour and are expected to fail today. strict=True
+# means CI fails if the API is ever fixed (XPASS), prompting us to drop the mark.
+
+
+@pytest.mark.api
+@pytest.mark.booking
+@pytest.mark.xfail(
+    strict=True,
+    reason="Known API bug: PATCH with only bookingdates.checkin overwrites checkout with '0NaN-aN-aN'",
+)
+def test_partial_update_of_checkin_keeps_checkout(api_client, created_booking, auth_token):
+    """Patching one date must not destroy the other."""
+    booking_id, original_payload = created_booking
+
+    response = api_client.partial_update_booking(
+        booking_id, {"bookingdates": {"checkin": "2031-09-09"}}, auth_token
+    )
+    assert response.status_code == 200
+
+    dates = api_client.get_booking(booking_id).json()["bookingdates"]
+    assert dates["checkin"] == "2031-09-09"
+    assert dates["checkout"] == original_payload["bookingdates"]["checkout"]
+
+
+@pytest.mark.api
+@pytest.mark.booking
+@pytest.mark.xfail(
+    strict=True,
+    reason="Known API bug: POST /booking with a missing required field returns 500, not 400",
+)
+def test_create_booking_missing_required_field_is_rejected(api_client, booking_payload_factory):
+    """A create request missing a required field is a client error, not a server crash."""
+    payload = booking_payload_factory()
+    del payload["firstname"]
+
+    response = api_client.create_booking(payload)
+
+    assert response.status_code == 400

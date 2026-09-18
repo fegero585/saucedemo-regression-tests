@@ -75,6 +75,13 @@ curl -s "https://api.github.com/repos/fegero585/saucedemo-regression-tests/actio
 
 - `problem_user`, `error_user`, `visual_user`, `performance_glitch_user`:
   intentional demo defects, skipped on purpose.
+- API defects: only two known bugs are tested, as `xfail(strict=True)` (PATCH
+  of one date corrupting the other; POST with a missing field returning 500).
+  Strict means CI fails if the API gets fixed - then remove the mark. The other
+  observed oddities (garbage values silently coerced, `checkin`/`checkout`
+  filters not matching the docs' "greater than or equal", 500 on an invalid
+  date filter, 405 instead of 404 for writes to a missing id) are deliberately
+  untested. `DELETE` returning 201 is documented, not a bug.
 - Cart contents persisting across logout/login, and checkout accepting `abc`
   as a postal code or whitespace-only names: observed, but whether they're
   bugs is a product decision. Don't add tests asserting either way without
