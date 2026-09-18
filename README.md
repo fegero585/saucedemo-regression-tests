@@ -172,11 +172,6 @@ pytest -m mobile --device="iPhone 12"
 pytest -m mobile --device="Pixel 5"
 ```
 
-### Run tests in parallel
-```bash
-pytest -n auto
-```
-
 ### Browser-based HTML report
 Every run auto-generates a self-contained `report.html` (via `pytest-html`,
 configured in `pytest.ini`) - open it in any browser to see pass/fail status,
