@@ -167,8 +167,10 @@ pytest --headed --slowmo=1000
 ```
 
 ### Mobile device emulation
+The mobile tests emulate an iPhone 12 by default, so a plain `pytest` run
+(including CI) covers the mobile layout. Pass `--device` to try another device:
 ```bash
-pytest -m mobile --device="iPhone 12"
+pytest -m mobile                     # iPhone 12 (default)
 pytest -m mobile --device="Pixel 5"
 ```
 

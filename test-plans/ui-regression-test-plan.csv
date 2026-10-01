@@ -24,8 +24,8 @@ TC-UI-06,Products are displayed on the inventory page,High,Positive,Logged in as
 2. Observe the inventory page.",At least one product card is visible (6 products total on a fresh account).,,,,,tests/test_inventory.py::test_products_are_displayed
 TC-UI-07,Open a product's details page,Medium,Positive,Logged in.,product: Sauce Labs Backpack,"1. Log in.
 2. Click the ""Sauce Labs Backpack"" product name/image.","Product detail page opens; the title shown is ""Sauce Labs Backpack"".",,,,,tests/test_inventory.py::test_can_open_product_details
-TC-UI-08,Products display a price,Medium,Positive,Logged in.,product: Sauce Labs Backpack,"1. Log in.
-2. Locate the Backpack's price on its product card.","A price is shown and includes a ""$"" symbol (e.g. ""$29.99"").",,,,,tests/test_inventory.py::test_products_have_prices
+TC-UI-08,Every product displays a price,Medium,Positive,Logged in.,all products on the inventory page,"1. Log in.
+2. Check the price on every product card.","Every product card shows a price, and each includes a ""$"" symbol (e.g. ""$29.99"").",,,,,tests/test_inventory.py::test_products_have_prices
 TC-UI-09,Sort products: Name (A to Z),Medium,Positive,"Logged in, on the inventory page.","sort option: ""Name (A to Z)""","1. Open the sort dropdown (top right of the product list).
 2. Select ""Name (A to Z)"".","Product names are listed in ascending alphabetical order, top to bottom.",,,,,tests/test_inventory.py::test_sort_by_name_a_to_z
 TC-UI-10,Sort products: Name (Z to A),Medium,Positive,"Logged in, on the inventory page.","sort option: ""Name (Z to A)""","1. Open the sort dropdown.

@@ -39,10 +39,13 @@ class InventoryPage(BasePage):
         # longer matches; the data-test hook is stable and unique per card.
         card.locator("[data-test$='-title-link']").click()
 
+    def add_to_cart_button(self, product_name: str):
+        """Returns the 'Add to cart' button on a product's card."""
+        return self.product_card(product_name).get_by_role("button", name="Add to cart")
+
     def add_product_to_cart(self, product_name: str) -> None:
         """Add a product to the cart."""
-        card = self.product_card(product_name)
-        card.get_by_role("button", name="Add to cart").click()
+        self.add_to_cart_button(product_name).click()
 
     def remove_product_from_cart(self, product_name: str) -> None:
         """Remove a product from the cart."""
@@ -79,6 +82,10 @@ class InventoryPage(BasePage):
     def get_product_names(self) -> list[str]:
         """Get all product names in on-screen order (row 1 left-to-right, then row 2, ...)."""
         return self.page.locator(".inventory_item_name").all_inner_texts()
+
+    def get_product_price_labels(self) -> list[str]:
+        """Get every product's price text as shown (e.g. '$29.99'), in on-screen order."""
+        return self.page.locator(".inventory_item_price").all_inner_texts()
 
     def get_product_prices(self) -> list[float]:
         """Get all product prices as floats, in on-screen order."""
