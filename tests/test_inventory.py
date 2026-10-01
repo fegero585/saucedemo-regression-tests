@@ -26,9 +26,11 @@ def test_can_open_product_details(logged_in_user, product_page):
 
 @pytest.mark.inventory
 def test_products_have_prices(logged_in_user):
-    """All products should have prices displayed."""
-    price = logged_in_user.get_product_price(BACKPACK)
-    assert "$" in price
+    """Every product card shows a price with a "$" symbol."""
+    names = logged_in_user.get_product_names()
+    prices = logged_in_user.get_product_price_labels()
+    assert len(prices) == len(names), f"{len(names)} products but {len(prices)} prices"
+    assert all("$" in price for price in prices), prices
 
 
 @pytest.mark.inventory

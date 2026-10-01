@@ -1,6 +1,8 @@
 """Regression tests: login functionality."""
 import pytest
+from playwright.sync_api import expect
 from pages.login_page import LOGIN_URL
+from pages.inventory_page import INVENTORY_URL
 
 STANDARD_USER = "standard_user"
 STANDARD_PASSWORD = "secret_sauce"
@@ -10,11 +12,12 @@ LOCKED_OUT_USER = "locked_out_user"
 @pytest.mark.smoke
 @pytest.mark.login
 def test_valid_login(login_page, inventory_page):
-    """User can login with valid credentials and reach inventory."""
+    """User can login with valid credentials and is redirected to inventory."""
     login_page.load()
     login_page.login(STANDARD_USER, STANDARD_PASSWORD)
-    inventory_page.load()  # Navigate to confirm page
-    assert "inventory" in inventory_page.get_url()
+    # No manual navigation: the login itself must land us on the inventory.
+    expect(inventory_page.page).to_have_url(INVENTORY_URL)
+    inventory_page.expect_loaded()
 
 
 @pytest.mark.login
@@ -23,6 +26,7 @@ def test_invalid_password(login_page):
     login_page.load()
     login_page.login(STANDARD_USER, "wrong_password")
     login_page.expect_error_message("Username and password do not match")
+    login_page.expect_on_login_page()
 
 
 @pytest.mark.login
@@ -31,6 +35,7 @@ def test_invalid_username(login_page):
     login_page.load()
     login_page.login("invalid_user", STANDARD_PASSWORD)
     login_page.expect_error_message("Username and password do not match")
+    login_page.expect_on_login_page()
 
 
 @pytest.mark.login

@@ -19,3 +19,12 @@ class BasePage:
     def get_url(self) -> str:
         """Get the current page URL."""
         return self.page.url
+
+    def has_horizontal_scroll(self) -> bool:
+        """True if content is wider than the viewport.
+
+        A snapshot - only call it after waiting for the page to render.
+        """
+        return self.page.evaluate(
+            "document.documentElement.scrollWidth > document.documentElement.clientWidth"
+        )

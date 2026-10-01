@@ -80,7 +80,7 @@ saucedemo-regression-tests/
 ├── tests/                          # Test Suite
 │   ├── conftest.py                 # Pytest fixtures & configuration (UI)
 │   ├── test_login.py               # Login validation tests
-│   ├── test_inventory.py           # Product listing & filtering tests
+│   ├── test_inventory.py           # Product listing, details & sorting tests
 │   ├── test_add_to_cart.py         # Add to cart functionality tests
 │   ├── test_cart_management.py     # Cart operations tests
 │   ├── test_checkout.py            # Checkout flow with price verification
@@ -167,8 +167,10 @@ pytest --headed --slowmo=1000
 ```
 
 ### Mobile device emulation
+The mobile tests emulate an iPhone 12 by default, so a plain `pytest` run
+(including CI) covers the mobile layout. Pass `--device` to try another device:
 ```bash
-pytest -m mobile --device="iPhone 12"
+pytest -m mobile                     # iPhone 12 (default)
 pytest -m mobile --device="Pixel 5"
 ```
 
@@ -196,21 +198,21 @@ The following test accounts are available on Saucedemo:
 |----------|----------|---------|
 | `standard_user` | `secret_sauce` | Standard user - all features work |
 | `locked_out_user` | `secret_sauce` | Locked account - tests login failure |
-| `problem_user` | `secret_sauce` | UI display issues - tests resilience |
-| `performance_glitch_user` | `secret_sauce` | Slow loading - tests timeout handling |
+| `problem_user` | `secret_sauce` | UI display issues - intentional demo defects, not tested |
+| `performance_glitch_user` | `secret_sauce` | Slow loading - intentional demo defect, not tested |
 
 ## 📊 Test Coverage
 
 | Category | Tests | Notes |
 |----------|-------|-------|
-| Login | 5 tests | Valid/invalid credentials, empty fields |
-| Inventory | 5 tests | Listing, sorting, filtering |
-| Add to Cart | 4 tests | Single & multiple items |
-| Cart Management | 4 tests | Edit, remove, persist |
-| Checkout | 1 test | Full flow with subtotal/tax/total price verification |
-| Mobile | 2 tests | Login & add-to-cart under device emulation |
-| API | 13 tests | Health check, auth, booking CRUD, search/filtering |
-| **Total** | **34 tests** | |
+| Login | 11 tests | Valid/invalid/empty credentials, locked-out user, logout, protected pages (4) |
+| Inventory | 7 tests | Listing, product details, prices, sorting (4 orders) |
+| Add to Cart | 4 tests | Single & multiple items, badge count, remove |
+| Cart Management | 5 tests | Empty cart, continue shopping, persists across navigation & reload |
+| Checkout | 6 tests | Subtotal/tax/total verification, required-field validation (4), order completion |
+| Mobile | 2 tests | Login & add-to-cart under iPhone 12 emulation (layout, tap target) |
+| API | 29 tests | Health check, auth, booking CRUD & validation, search/filtering (2 known bugs as xfail) |
+| **Total** | **64 tests** | Counted as collected by pytest (parametrized cases count separately) |
 
 ## 🏗️ Architecture Highlights
 

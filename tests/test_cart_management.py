@@ -1,6 +1,7 @@
 """Regression tests: cart management."""
 import pytest
 from playwright.sync_api import expect
+from pages.inventory_page import INVENTORY_URL
 
 BACKPACK = "Sauce Labs Backpack"
 BIKE_LIGHT = "Sauce Labs Bike Light"
@@ -28,8 +29,8 @@ def test_continue_shopping_from_cart(logged_in_user, cart_page):
     logged_in_user.open_cart()
     
     cart_page.continue_shopping()
-    # Should be back on inventory page
-    assert "inventory" in logged_in_user.page.url
+    expect(logged_in_user.page).to_have_url(INVENTORY_URL)
+    logged_in_user.expect_loaded()
 
 
 @pytest.mark.cart
