@@ -1,6 +1,6 @@
 # 🧪 Saucedemo Regression Tests
 
-A comprehensive **test automation suite** for [saucedemo.com](https://www.saucedemo.com/) built with modern QA best practices. This project demonstrates expertise in **end-to-end testing**, **page object modeling**, and **test automation frameworks**.
+A comprehensive **test automation suite** for [saucedemo.com](https://www.saucedemo.com/) built with modern QA best practices. This project covers login, cart, checkout… in **end-to-end testing**, **page object modeling**, and **test automation frameworks**.
 
 📊 **[Live test report](https://fegero585.github.io/saucedemo-regression-tests/)** - auto-published by CI on every push to `main`, no need to clone the repo to see actual pass/fail results.
 
