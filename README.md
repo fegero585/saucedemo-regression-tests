@@ -20,7 +20,7 @@ A comprehensive **test automation suite** for [saucedemo.com](https://www.sauced
 
 | Technology | Purpose |
 |-----------|---------|
-| **Python 3.14** | Programming language |
+| **Python 3.8** | Programming language |
 | **Pytest** | Test framework & assertions |
 | **Playwright** | Browser automation & interactions |
 | **pytest-playwright** | Pytest plugin for Playwright integration |
